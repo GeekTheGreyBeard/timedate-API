@@ -4,6 +4,8 @@ This project provides a FastAPI application with an MCP (Model Context Protocol)
 
 ## Features
 - **API endpoint:** `/api/timedate` (POST)
+- **Usage endpoint:** `/api/usage` (GET)
+- **Timezone discovery:** `/api/timezones` (GET)
 - **MCP server:** `/mcp` (exposes all API endpoints)
 - **Docker & Docker Compose** support
 - **Healthcheck** for production readiness
@@ -23,7 +25,17 @@ curl -X POST http://localhost:8200/api/timedate \
   -d '{"timezone": "Europe/London"}'
 ```
 
-### 3. Run Tests
+### 3. Discover Usage
+```sh
+curl http://localhost:8200/api/usage
+```
+
+### 4. List Supported Timezones
+```sh
+curl http://localhost:8200/api/timezones
+```
+
+### 5. Run Tests
 ```sh
 pip install -r requirements-dev.txt
 pytest test_timedate_app.py
@@ -37,6 +49,12 @@ pytest test_timedate_app.py
   "timezone": "America/Denver"
 }
 ```
+
+## API Endpoints
+
+- `GET /api/usage` returns endpoint descriptions and example requests/responses.
+- `GET /api/timezones` returns the supported IANA timezone names.
+- `POST /api/timedate` accepts `{"timezone": "Europe/London"}` and returns the current ISO-8601 date/time for that timezone.
 
 ## Files
 - `timedate_app.py` — Main FastAPI app
