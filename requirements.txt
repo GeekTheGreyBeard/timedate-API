@@ -1,4 +1,4 @@
-fastapi
-fastapi-mcp
-uvicorn
-pytz 
+fastapi==0.136.1
+fastapi-mcp==0.4.0
+tzdata==2026.2
+uvicorn==0.47.0

@@ -1,5 +1,5 @@
 from fastapi.testclient import TestClient
-import pytz
+from zoneinfo import available_timezones
 from timedate_app import app
 
 client = TestClient(app)
@@ -10,12 +10,24 @@ def test_valid_timezone():
     data = response.json()
     assert "datetime" in data
     assert data["timezone"] == "Europe/London"
+    assert data["utc_datetime"].endswith("+00:00")
+    assert isinstance(data["unix_timestamp"], int)
+    assert data["utc_offset"].startswith(("+", "-"))
+    assert data["abbreviation"]
 
 def test_invalid_timezone():
     response = client.post("/api/timedate", json={"timezone": "Invalid/Zone"})
     assert response.status_code == 400
     data = response.json()
     assert data["error"] == "Invalid Timezone"
+    assert "/api/timezones" in data["message"]
+
+def test_health_endpoint():
+    response = client.get("/health")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["status"] == "ok"
+    assert data["timezone_count"] == len(available_timezones())
 
 def test_usage_endpoint_describes_examples():
     response = client.get("/api/usage")
@@ -30,6 +42,12 @@ def test_timezones_endpoint_lists_supported_timezones():
     response = client.get("/api/timezones")
     assert response.status_code == 200
     data = response.json()
-    assert data["count"] == len(pytz.all_timezones)
+    assert data["count"] == len(available_timezones())
     assert "Europe/London" in data["timezones"]
     assert "America/Denver" in data["timezones"]
+
+def test_timezones_endpoint_filters_by_region_and_query():
+    response = client.get("/api/timezones", params={"region": "America", "query": "denver"})
+    assert response.status_code == 200
+    data = response.json()
+    assert data == {"count": 1, "timezones": ["America/Denver"]}

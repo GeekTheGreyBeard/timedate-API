@@ -6,7 +6,7 @@ services:
       - "8200:8200"
     restart: always
     healthcheck:
-      test: ["CMD", "curl", "-f", "-X", "POST", "http://localhost:8200/api/timedate", "-H", "Content-Type: application/json", "-d", '{"timezone": "Europe/London"}']
+      test: ["CMD", "curl", "-f", "http://localhost:8200/health"]
       interval: 30s
       timeout: 10s
       retries: 3
