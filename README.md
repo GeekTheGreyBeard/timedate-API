@@ -2,8 +2,6 @@
 
 This project provides a FastAPI application with an MCP (Model Context Protocol) server. It returns the current time and date for a submitted timezone.
 
-Project documentation: `OpenClaw/Projects/patriciAI/timedateAPI/`
-
 ## Features
 - **API endpoint:** `/api/timedate` (POST)
 - **MCP server:** `/mcp` (exposes all API endpoints)
@@ -29,6 +27,15 @@ curl -X POST http://localhost:8200/api/timedate \
 ```sh
 pip install -r requirements-dev.txt
 pytest test_timedate_app.py
+```
+
+## Example Response
+
+```json
+{
+  "datetime": "2026-05-15T19:50:03.173125-06:00",
+  "timezone": "America/Denver"
+}
 ```
 
 ## Files
